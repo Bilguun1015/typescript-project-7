@@ -9,10 +9,22 @@ router.get('/login', function (req, res) {
 });
 router.post('/login', function (req, res) {
     var _a = req.body, email = _a.email, password = _a.password;
-    if (email) {
-        res.send(email.toUpperCase());
+    if (email && password && email === 'test' && password === 'pass') {
+        // mark the person as logged in
+        req.session = { loggedIn: true };
+        // redirect them to the root route
+        res.redirect('/');
     }
     else {
-        res.send('You must provide email');
+        res.send('Invalid email or password');
+    }
+});
+router.get('/', function (req, res) {
+    // req.session
+    if (req.session && req.session.loggedIn) {
+        res.send("\n      <div>\n        <div>\n          You are logged in!\n          <a href=\"/logout\">Logout</a>\n        </div>\n      </div>\n    ");
+    }
+    else {
+        res.send("\n      <div>\n        <div>\n          You are not logged in!\n          <a href=\"/login\">Login</a>\n        </div>\n      </div>\n    ");
     }
 });
